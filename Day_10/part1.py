@@ -5,7 +5,6 @@ def get_lines(filename):
 lines = get_lines("input.txt")
 
 track = [num for num in range(20, 220+1, 40)]
-print(track)
 cycle_count = 0
 reg = 1
 sig_strength = 0
