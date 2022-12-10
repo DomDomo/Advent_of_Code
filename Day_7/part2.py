@@ -5,7 +5,6 @@ def get_lines(filename):
         return file.readlines()
 
 lines = get_lines("input.txt")
-threshold = 100000
 
 system = defaultdict(int)
 directory = [] 
@@ -24,9 +23,13 @@ for line in lines:
             for i in range(len(directory)):
                 system["/".join(directory[:i+1])] += size
 
-final_size = 0
-for key in system:
-    if system[key] <= threshold:
-        final_size += system[key]
+unused = 70000000 - system["/"]
+needed = 30000000 - unused
 
-print(final_size)
+to_delete = system["/"]
+
+for key in system:
+    if system[key] > needed:
+        to_delete = min(to_delete, system[key])
+
+print(to_delete)
