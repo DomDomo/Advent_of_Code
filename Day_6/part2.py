@@ -1,4 +1,4 @@
-queue_size = 4
+queue_size = 14
 
 with open('input.txt', 'r') as f:
     read_num = 0
@@ -19,4 +19,5 @@ with open('input.txt', 'r') as f:
 
         c = f.read(1)
 
+    print(queue)
     print(read_num)
