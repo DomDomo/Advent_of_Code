@@ -56,8 +56,35 @@ def makeTailTouch(hx, hy, tx, ty):
         if tailIsTouching(hx, hy, tmpx, tmpy):
             return (tmpx, tmpy)
     
+    # diagnal follow
+    diag_x = hx-1 if tx < hx else hx+1
+    diag_y = hy-1 if ty < hy else hy+1
+
+    return (diag_x, diag_y)
+    
+def updateFollowCords(hx, hy, tx, ty):
+    row_change = (hx - tx)
+    col_change = (hy - ty)
+
+    if abs(row_change) >= 2 and abs(col_change) >= 2:
+        return makeTailTouch(hx, hy, tx, ty)
+    elif abs(row_change) >= 2:
+        return (hx - 1 if tx < hx else hx + 1, hy)
+    elif abs(col_change) >= 2:
+        return (hx, hy - 1 if ty < hy else hy + 1)
+    else:
+        return (tx, ty)
+
+def updateTailCords(hx, hy, tx, ty, move):
+    res_tx = tx
+    res_ty = ty
+    if not headNearTail(hx, hy, res_tx, res_ty):
+        res_tx, res_ty = updateFollowCords(hx, hy, tx, ty)
+
+    return (res_tx, res_ty)
+
 hx, hy = 0, 0
-tx, ty = 0, 0
+t = [(0, 0) for i in range(9)]
 
 visited = set()
 
@@ -66,16 +93,13 @@ for line in lines:
     step = int(step)
  
     for _ in range(step):
+        visited.add(t[8])
         hx, hy = updateCords(hx, hy, move)
-        
-        if not headNearTail(hx, hy, tx, ty):
-            tmpx, tmpy = updateCords(tx, ty, move)
-            if not tailIsTouching(hx, hy, tmpx, tmpy):
-                tx, ty = makeTailTouch(hx, hy, tx, ty)
-            else:
-                tx, ty = updateCords(tx, ty, move)
+        t[0] = updateTailCords(hx, hy, t[0][0], t[0][1], move)
+        for i in range(1, 9):
+            t[i] = updateTailCords(t[i-1][0], t[i-1][1], t[i][0], t[i][1], move)
 
-        visited.add((tx, ty))
+        visited.add(t[8])
         
 print(len(visited))
         
